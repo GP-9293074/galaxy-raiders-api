@@ -3,7 +3,7 @@ package galaxyraiders.core.physics
 open class Object2D(
   initialPosition: Point2D,
   initialVelocity: Vector2D,
-  val radius: Double,
+  var radius: Double,
   val mass: Double
 ) {
   var center: Point2D = initialPosition
@@ -12,7 +12,7 @@ open class Object2D(
   var velocity: Vector2D = initialVelocity
     protected set
 
-  fun move() {
+  open fun move() {
     this.center += this.velocity
   }
 
@@ -59,7 +59,7 @@ open class Object2D(
    *
    * @see https://arxiv.org/abs/1909.10053
    */
-  fun collideWith(target: Object2D, coefficientRestitution: Double) {
+  fun collideWith(target: Object2D, coefficientRestitution: Double): Point2D {
     assert(
       coefficientRestitution >= 0.0 && coefficientRestitution <= 1.0,
       { "Coefficient of restitution must be in the interval [0.0, 1.0]" }
@@ -74,6 +74,8 @@ open class Object2D(
 
     val theirVelocityChange = -impactImpulse / target.mass
     target.shift(theirVelocityChange)
+
+    return this.center
   }
 
   /**
